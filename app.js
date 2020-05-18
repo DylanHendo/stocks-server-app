@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const db = require('./database/db');    // database connection
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -18,7 +20,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(db);    // maked db available to use
 
+
+// include knex for DB queries
+const options = require("./knexfile.js");
+const knex = require("knex")(options);
+
+app.use((req, res, next) => {
+  req.db = knex
+  next()
+})
+
+
+// all valid routes other than /users will be redirected to be handled by indexRouter.
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

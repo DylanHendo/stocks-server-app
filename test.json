@@ -1,0 +1,74 @@
+{
+    "Error": false,
+    "Message": "Success",
+    "stocks": [
+        {
+            "timestamp": "2020-03-23T14:00:00.000Z",
+            "symbol": "A",
+            "name": "Agilent Technologies Inc",
+            "industry": "Health Care",
+            "open": 66.8,
+            "high": 67.5599,
+            "low": 62.09,
+            "close": 63.37,
+            "volumes": 2989560
+        },
+        {
+            "timestamp": "2020-03-22T14:00:00.000Z",
+            "symbol": "A",
+            "name": "Agilent Technologies Inc",
+            "industry": "Health Care",
+            "open": 65.99,
+            "high": 71,
+            "low": 64.96,
+            "close": 66.46,
+            "volumes": 3258440
+        },
+        {
+            "timestamp": "2020-03-19T14:00:00.000Z",
+            "symbol": "A",
+            "name": "Agilent Technologies Inc",
+            "industry": "Health Care",
+            "open": 68.54,
+            "high": 68.59,
+            "low": 64.17,
+            "close": 65.76,
+            "volumes": 3430700
+        },
+        {
+            "timestamp": "2020-03-18T14:00:00.000Z",
+            "symbol": "A",
+            "name": "Agilent Technologies Inc",
+            "industry": "Health Care",
+            "open": 65.19,
+            "high": 69.88,
+            "low": 65.18,
+            "close": 68.87,
+            "volumes": 4123860
+        }
+    ]
+}
+
+
+
+
+{
+    "timestamp": "2020-03-23T14:00:00.000Z",
+    "symbol": "A",
+    "....."
+},
+{
+    "timestamp": "2020-03-22T14:00:00.000Z",
+    "symbol": "A",
+    "....."
+},
+{
+    "timestamp": "2020-03-19T14:00:00.000Z",
+    "symbol": "A",
+    "....."
+},
+{
+    "timestamp": "2020-03-18T14:00:00.000Z",
+    "symbol": "A",
+    "....."
+}
