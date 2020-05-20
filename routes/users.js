@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
+let jwt = require('jsonwebtoken');
+let bcrypt = require('bcrypt');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -7,12 +9,41 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.post('/user/register', function (req, res, next) {
+router.post('/register', function (req, res, next) {
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // make sure neither are empty
+  if (!email || !password) {
+    res.status(400).json({
+      error: true,
+      message: "Request body incomplete - email and password needed"
+    })
+    return;
+  }
+
+
+
 
 });
 
 
-router.post('/user/login', function (req, res, next) {
+router.post('/login', function (req, res, next) {
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // make sure neither are empty
+  if (!email || !password) {
+    res.status(400).json({
+      error: true,
+      message: "Request body incomplete - email and password needed"
+    })
+    return;
+  }
+
+
 
 });
 

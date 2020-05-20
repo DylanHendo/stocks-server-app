@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
 
 /* GET home page. */
@@ -15,10 +15,35 @@ router.get('/stocks/symbols', function (req, res, next) {
     .distinct("name")       // only get one copy of each select (dates not included)
     .where("industry", "like", `%${req.query.industry}%`)   // alow string querying
     .then(rows => {
-      res.json({ "Error": false, "Message": "Success", "stocks": rows });
+      res.json({
+        "Error": false,
+        "Message": "Success",
+        "stocks": rows
+      });
+
+      // if symbols, numbers entered, return 404: "Industry sector not found"
+      // it can be an empty param ??
+
+      // if (/^[a-z]+$/i.test(req.query.industry)) {
+      //   res.json({
+      //     "Error": false,
+      //     "Message": "Success",
+      //     "stocks": rows
+      //   });
+      // } else {
+      //   res.status(400).json({
+      //     "Error": true,
+      //     "Message": "Invalid query parameter"
+      //   })
+      //   return;
+      // }
+
     })
     .catch(err => {
-      res.json({ "Error": true, "Message": "Error executing mysql query" });
+      res.json({
+        "Error": true,
+        "Message": "Error executing mysql query"
+      });
     })
 });
 
@@ -30,7 +55,16 @@ router.get('/stocks/:symbol', function (req, res, next) {
     .limit(1)   // only pick top row (most recent date)
     .where("symbol", "=", req.params.symbol)
     .then(rows => {
-      res.json({ "Error": false, "Message": "Success", "stocks": rows });
+
+      // if symbol is 1-5 capital letters and in the DB, show rows, else, appropriate error
+      if (/^[A-Z]{1,5}$/.test(req.params.symbol)) {
+        if (rows.length == 0)
+          res.status(404).json({ "Error": true, "Message": "No entry for symbol in stocks database" });
+        else
+          res.status(200).json({ "Error": false, "Message": "Success", "stocks": rows });
+      } else {
+        res.status(400).json({ "Error": true, "Message": "Symobl must be 1-5 capital letters" })
+      }
     })
     .catch(err => {
       res.json({ "Error": true, "Message": "Error executing mysql query" });
