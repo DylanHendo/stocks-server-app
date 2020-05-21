@@ -11,8 +11,8 @@
         [] username
         [] password
 [] generate POST route
-    [] user/register
-    [] user/login
+    [X] user/register
+    [X] user/login
 [] make /stocks/authed/{symbol} authorized
 [] implement security
     [] knex
