@@ -6,16 +6,17 @@
     [] /stocks/authed/{symbol}
 [] create 'users' tables in database
     [] does this have to be created on each startup? 
-    [] DB design
-        [] id
-        [] username
-        [] password
+    [X] DB design
+        [X] id (int NOT NULL AUTO_INCRMENT)
+        [X] username (varchar(255) NOT NULL UNIQUE)
+        [X] password (varcahr(255) NOT NULL)
+        [X] PRIMARY KEY (id)
 [] generate POST route
     [X] user/register
     [X] user/login
 [] make /stocks/authed/{symbol} authorized
 [] implement security
-    [] knex
+    [X] knex
     [] helmet
     [] morgan
 [] test functionality using supplied tests

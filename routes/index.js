@@ -8,32 +8,33 @@ router.get('/', function (req, res, next) {
 });
 
 
+//  .../stocks/symbols             <-- should return all 495 stocks
+//  .../stocks/symbols?            <-- should return all 495 stocks
+//  .../stocks/symbols?industry    <-- should return error ("Invalid query parameter: only 'industry' is permitted")
+//  .../stocks/symbols?industry=   <-- should return error ("Invalid query parameter: only 'industry' is permitted")
+
 // GET stocks/symbol page, filterable by industry
 router.get('/stocks/symbols', function (req, res, next) {
+  let queryIndustry = req.params.industry;
+
   req.db.from("stocks")
     .select("name", "symbol", "industry")
     .distinct("name")       // only get one copy of each select (dates not included)
-    .where("industry", "like", `%${req.query.industry}%`)   // alow string querying
+    // .where("industry", "like", `%${industry}%`)   // alow string querying
+    .where({ industry: queryIndustry })
     .then(rows => {
-      res.json({
-        "Error": false,
-        "Message": "Success",
-        "stocks": rows
-      });
 
-      // if symbols, numbers entered, return 404: "Industry sector not found"
-      // it can be an empty param ??
+      if (rows.length == 0)
+        res.status(404).json({ "error": true, "message": "Industry sector not found" });
+      else
+        res.json(rows);
 
       // if (/^[a-z]+$/i.test(req.query.industry)) {
-      //   res.json({
-      //     "Error": false,
-      //     "Message": "Success",
-      //     "stocks": rows
-      //   });
+      //   res.json(rows);
       // } else {
       //   res.status(400).json({
-      //     "Error": true,
-      //     "Message": "Invalid query parameter"
+      //     "error": true,
+      //     "message": "Invalid query parameter"
       //   })
       //   return;
       // }
@@ -59,15 +60,15 @@ router.get('/stocks/:symbol', function (req, res, next) {
       // if symbol is 1-5 capital letters and in the DB, show rows, else, appropriate error
       if (/^[A-Z]{1,5}$/.test(req.params.symbol)) {
         if (rows.length == 0)
-          res.status(404).json({ "Error": true, "Message": "No entry for symbol in stocks database" });
+          res.status(404).json({ "error": true, "message": "No entry for symbol in stocks database" });
         else
-          res.status(200).json({ "Error": false, "Message": "Success", "stocks": rows });
+          res.status(200).json(rows[0]);
       } else {
-        res.status(400).json({ "Error": true, "Message": "Symobl must be 1-5 capital letters" })
+        res.status(400).json({ "error": true, "message": "Stock symbol incorrect format - must be 1-5 capital letters" })
       }
     })
     .catch(err => {
-      res.json({ "Error": true, "Message": "Error executing mysql query" });
+      res.json({ "error": true, "message": "Error executing mysql query" });
     })
 });
 

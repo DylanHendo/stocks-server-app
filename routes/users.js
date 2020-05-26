@@ -9,6 +9,7 @@ router.get('/', function (req, res, next) {
 });
 
 
+// register route
 router.post('/register', function (req, res, next) {
 
   const email = req.body.email;
@@ -17,7 +18,7 @@ router.post('/register', function (req, res, next) {
   // make sure neither are empty
   if (!email || !password) {
     res.status(400).json({
-      success: false,
+      error: true,
       message: "Request body incomplete - email and password needed"
     });
     return;
@@ -31,7 +32,7 @@ router.post('/register', function (req, res, next) {
   queryUsers
     .then(users => {
       if (users.length > 0) {
-        res.status(409).json({ success: false, message: "User already exists" })
+        res.status(409).json({ error: true, message: "User already exists!" })
         return;
       }
     })
@@ -51,6 +52,8 @@ router.post('/register', function (req, res, next) {
 });
 
 
+
+// login route
 router.post('/login', function (req, res, next) {
 
   const email = req.body.email;
@@ -59,8 +62,8 @@ router.post('/login', function (req, res, next) {
   // make sure neither are empty
   if (!email || !password) {
     res.status(400).json({
-      success: false,
-      message: "Request body incomplete - email and password needed"
+      error: true,
+      message: "Request body invalid - email and password are required"
     })
     return;
   }
@@ -73,7 +76,7 @@ router.post('/login', function (req, res, next) {
   queryUsers
     .then(users => {
       if (users.length == 0) {
-        res.status(401).json({ success: false, message: "Incorrect email or password" });
+        res.status(401).json({ error: true, message: "Incorrect email or password" });
         return;
       }
 
@@ -84,12 +87,12 @@ router.post('/login', function (req, res, next) {
             res.status(401).json({ success: false, message: "Incorrect email or password" });
           } else {
             const secretKey = "secret key";
-            const expiresIn = 60 * 60 * 24;  // 1 day
-            const exp = Math.floor(Date.now() / 1000) + expiresIn;
+            const expires_in = 60 * 60 * 24;  // 1 day
+            const exp = Math.floor(Date.now() / 1000) + expires_in;
             const token = jwt.sign({ email, exp }, secretKey);
-            res.status(200).json({ token_type: "Bearer", token, expiresIn });
+            res.status(200).json({ token, token_type: "Bearer", expires_in });
           }
-        });
+        })
     })
 });
 
