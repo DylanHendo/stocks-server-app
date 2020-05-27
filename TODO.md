@@ -1,7 +1,7 @@
 * Todo list:
 
 [] generate GET routes
-    [] /stocks/smbols
+    [X] /stocks/smbols
     [X] /stocks/{symbol}
     [] /stocks/authed/{symbol}
 [] create 'users' tables in database
@@ -11,14 +11,15 @@
         [X] username (varchar(255) NOT NULL UNIQUE)
         [X] password (varcahr(255) NOT NULL)
         [X] PRIMARY KEY (id)
-[] generate POST route
+[X] generate POST route
     [X] user/register
     [X] user/login
 [] make /stocks/authed/{symbol} authorized
-[] implement security
+[X] implement security
     [X] knex
-    [] helmet
-    [] morgan
+    [X] helmet
+    [X] morgan
+    [X] cors
 [] test functionality using supplied tests
 [] swagger docs
 [] swap to linux

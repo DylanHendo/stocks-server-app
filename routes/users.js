@@ -8,12 +8,9 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
-
-// register route
-router.post('/register', function (req, res, next) {
-
-  const email = req.body.email;
-  const password = req.body.password;
+// middleware
+function isRequestBodyEmpty(req, res, next) {
+  const { email, password } = req.body;
 
   // make sure neither are empty
   if (!email || !password) {
@@ -23,6 +20,14 @@ router.post('/register', function (req, res, next) {
     });
     return;
   }
+  next();
+}
+
+
+// register route
+router.post('/register', isRequestBodyEmpty, function (req, res, next) {
+
+  const { email, password } = req.body;
 
   const queryUsers = req.db
     .from("users")
@@ -36,9 +41,9 @@ router.post('/register', function (req, res, next) {
         return;
       }
     })
-    .catch(err => {
-      console.log("error 1")
-    });
+  // .catch(err => {
+  //   console.log("error 1")
+  // });
 
   const saltRounds = 10;
   const hash = bcrypt.hashSync(password, saltRounds);
@@ -54,19 +59,8 @@ router.post('/register', function (req, res, next) {
 
 
 // login route
-router.post('/login', function (req, res, next) {
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  // make sure neither are empty
-  if (!email || !password) {
-    res.status(400).json({
-      error: true,
-      message: "Request body invalid - email and password are required"
-    })
-    return;
-  }
+router.post('/login', isRequestBodyEmpty, function (req, res, next) {
+  const { email, password } = req.body;
 
   const queryUsers = req.db
     .from("users")
