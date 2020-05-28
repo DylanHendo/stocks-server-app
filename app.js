@@ -24,8 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(db);    // maked db available to use
 app.use(cors());
+app.use(db);    // maked db available to use
 app.use(helmet());
 
 // include knex for DB queries

@@ -8,6 +8,7 @@ router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
+
 // middleware
 function isRequestBodyEmpty(req, res, next) {
   const { email, password } = req.body;
@@ -51,7 +52,7 @@ router.post('/register', isRequestBodyEmpty, function (req, res, next) {
     .from("users")
     .insert({ email, hash })
     .then(() => {
-      res.status(200).json({ success: true, message: "User created" });
+      res.status(201).json({ success: true, message: "User created" });
     })
     .catch(err => { });   // this empty catch is used to quiet the UnhandledPromiseRejectionWarning
 });

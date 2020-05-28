@@ -2,8 +2,13 @@
 
 [] generate GET routes
     [X] /stocks/smbols
-    [X] /stocks/{symbol}
+    [] /stocks/{symbol}
+        [X] currently return 400 if any query supplied
+        [] only return 400 if 'from' or 'to' query
     [] /stocks/authed/{symbol}
+        [X] date is currently one day off
+        [X] if user only enters 'from', show all data from and onwards
+        [] if user adds time, from date becomes exclusive
 [] create 'users' tables in database
     [] does this have to be created on each startup? 
     [X] DB design
@@ -14,7 +19,7 @@
 [X] generate POST route
     [X] user/register
     [X] user/login
-[] make /stocks/authed/{symbol} authorized
+[X] make /stocks/authed/{symbol} authorized
 [X] implement security
     [X] knex
     [X] helmet
