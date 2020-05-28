@@ -25,8 +25,8 @@
     [X] helmet
     [X] morgan
     [X] cors
-[] test functionality using supplied tests
-[] swagger docs
+[X] test functionality using supplied tests
+[X] swagger docs
 [] swap to linux
 [] change to HTTPS
 [] report

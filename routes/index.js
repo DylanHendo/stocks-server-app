@@ -2,11 +2,10 @@ let express = require('express');
 let router = express.Router();
 let jwt = require("jsonwebtoken");
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Stocks Sever Application' });
-});
-
+// /* GET home page. */
+// router.get('/', function (req, res, next) {
+//   res.render('index', { title: 'Stocks Sever Application' });
+// });
 
 // GET stocks/symbol page, filterable by industry
 router.get('/stocks/symbols', function (req, res, next) {

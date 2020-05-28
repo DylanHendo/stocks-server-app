@@ -4,10 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-let cors = require('cors');
-let helmet = require('helmet');
-
+const cors = require('cors');
+const helmet = require('helmet');
 const db = require('./database/db');    // database connection
+
+const swaggerUI = require('swagger-ui-express');
+const yaml = require('yamljs');
+let swaggerDocument = yaml.load("./swagger.yaml");
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -37,6 +41,8 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use("/", swaggerUI.serve);
+app.get("/", swaggerUI.setup(swaggerDocument));
 
 // all valid routes other than /users will be redirected to be handled by indexRouter.
 app.use('/', indexRouter);

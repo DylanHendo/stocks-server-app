@@ -3,11 +3,10 @@ let router = express.Router();
 let jwt = require('jsonwebtoken');
 let bcrypt = require('bcrypt');
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
-});
-
+// /* GET users listing. */
+// router.get('/', function (req, res, next) {
+//   res.send('respond with a resource');
+// });
 
 // middleware
 function isRequestBodyEmpty(req, res, next) {
