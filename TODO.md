@@ -9,8 +9,7 @@
         [X] date is currently one day off
         [X] if user only enters 'from', show all data from and onwards
         [] if user adds time, from date becomes exclusive
-[] create 'users' tables in database
-    [] does this have to be created on each startup? 
+[X] create 'users' tables in database
     [X] DB design
         [X] id (int NOT NULL AUTO_INCRMENT)
         [X] username (varchar(255) NOT NULL UNIQUE)
@@ -28,6 +27,8 @@
 [X] test functionality using supplied tests
 [X] swagger docs
 [] swap to linux
+    [] make sure DB only has 1 default user
+    [] change password in db.js and knexfile.js to be "Cab230!"
 [] change to HTTPS
 [] report
 [] deploy

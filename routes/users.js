@@ -3,11 +3,6 @@ let router = express.Router();
 let jwt = require('jsonwebtoken');
 let bcrypt = require('bcrypt');
 
-// /* GET users listing. */
-// router.get('/', function (req, res, next) {
-//   res.send('respond with a resource');
-// });
-
 // middleware
 function isRequestBodyEmpty(req, res, next) {
   const { email, password } = req.body;
@@ -22,7 +17,6 @@ function isRequestBodyEmpty(req, res, next) {
   }
   next();
 }
-
 
 // register route
 router.post('/register', isRequestBodyEmpty, function (req, res, next) {
@@ -57,7 +51,6 @@ router.post('/register', isRequestBodyEmpty, function (req, res, next) {
 });
 
 
-
 // login route
 router.post('/login', isRequestBodyEmpty, function (req, res, next) {
   const { email, password } = req.body;
@@ -80,7 +73,7 @@ router.post('/login', isRequestBodyEmpty, function (req, res, next) {
           if (!match) {
             res.status(401).json({ success: false, message: "Incorrect email or password" });
           } else {
-            const secretKey = "secret key";
+            const secretKey = process.env.KEY;
             const expires_in = 60 * 60 * 24;  // 1 day
             const exp = Math.floor(Date.now() / 1000) + expires_in;
             const token = jwt.sign({ email, exp }, secretKey);

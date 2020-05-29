@@ -2,39 +2,15 @@ let express = require('express');
 let router = express.Router();
 let jwt = require("jsonwebtoken");
 
-// /* GET home page. */
-// router.get('/', function (req, res, next) {
-//   res.render('index', { title: 'Stocks Sever Application' });
-// });
-
-// GET stocks/symbol page, filterable by industry
+/**
+ * Route for /stocks/symbols page, allowd user to filter by ?industry
+ */
 router.get('/stocks/symbols', function (req, res, next) {
   req.db
     .from("stocks")
     .select("name", "symbol", "industry")
     .distinct("name")
     .modify(function (queryBuilder) {
-
-
-      // when there is no ?"xxx"
-      //  - req.query = {}
-      //  - req.query.industry = undefined
-
-      // when there is ?"xxx"
-      //  - req.query = {abc: ""}
-      //  - req.query.industry = undefined
-
-      // when xxx == industry
-      //  - req.qeury = {industry: "abc"}
-      //  - req.query.industry = abc
-
-      // i want to show all stocks if req.query.industry == undefined and req.query == {}
-
-      console.log(req.query)
-      console.log(req.query.industry)
-
-      // must be req.query.industry
-      // req.query.indsutry must not be empty
 
       // if no query param, display all data
       if (req.query.industry === undefined && (Object.keys(req.query).length === 0))
@@ -46,7 +22,6 @@ router.get('/stocks/symbols', function (req, res, next) {
 
       else if (req.query.industry)
         queryBuilder.where("industry", "like", `%${req.query.industry}%`);
-
 
     })
     .then(rows => {
@@ -64,9 +39,9 @@ router.get('/stocks/symbols', function (req, res, next) {
 
 
 
-// should return 400 if query param supplied
-
-// stocks page (most recent stock), filtered by symbol
+/**
+ * Route for /stocks/{symbol} page, where user can filter via the {symbol}
+ */
 router.get('/stocks/:symbol', function (req, res, next) {
   req.db.from("stocks")
     .select("*")
@@ -95,13 +70,12 @@ router.get('/stocks/:symbol', function (req, res, next) {
 
 
 
-
-//  - make sure secret keys are the same
-
-//  if token = 'xxx'                          403,  error:true, message:jwt malformed
-//  if token = 'xxx.yyy.zz'                   403,  error:true, message:invalid token
-//  if token missing letter in last, x.y.""   403,  error:true, message:invalid signature
-
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function authorize(req, res, next) {
   const authorization = req.headers.authorization;
   let token = null;
@@ -112,7 +86,7 @@ function authorize(req, res, next) {
 
     // verify
     try {
-      const decoded = jwt.verify(token, "secret key");
+      const decoded = jwt.verify(token, process.env.KEY);
       if (decoded.exp > Date.now()) {
         res.status(403).json({ error: true, message: "Token has expired" });
         return;
@@ -135,51 +109,49 @@ function authorize(req, res, next) {
 
 //    if invalid token:  403,  error: true, message: invalid token
 
-//    ../stocks/authed/                               <--   returns 400 Bad Request   (symbol must be 1-5 capital letters)
-//    ../stocks/authed/AAL                            <--   returns most recent 1 for AAL   (no square brackets)
-//    ../stocks/authed/AAL?                           <--   returns most recent 1 for AAL
-//    ../stocks/authed/AAL?from                       <--   returns 400 Bad Request   (Parameters allowed are from and to)
-//    ../stocks/authed/AAL?from=                      <--   returns 400 Bad Request   (Parameters allowed are from and to)
-//    ../stocks/authed/AAL31?from=                    <--   returns 400 Bad Request   (symbol must be 1-5 capital letters)
-//    ../stocks/authed/AAL?from=2020-03-19            <--   returns all AAL date from and onwards  (in square brackets)
-//    ../stocks/authed/AAL?from=2020-03-19&           <--   returns all AAL date from and onwards
-//    ../stocks/authed/AAL?from=2020-03-19&to         <--   returns 400 Bad Request   (Parameters allowed are from and to)
-//    ../stocks/authed/AAL?from=2020-03-19&to=        <--   returns 400 Bad Request   (Parameters allowed are from and to)
-//    ../stocks/authed/AAL?from=2020-03-19&to=2020    <--   returns 404 Not Found     (No entries available fordate range)
+//    [X]  ../stocks/authed/                               <--   returns 400 Bad Request   (symbol must be 1-5 capital letters)
+//    []  ../stocks/authed/AAL                            <--   returns most recent 1 for AAL   (no square brackets)
+//    []  ../stocks/authed/AAL?                           <--   returns most recent 1 for AAL
+//    [X]  ../stocks/authed/AAL?from                       <--   returns 400 Bad Request   (Parameters allowed are from and to)
+//    [X]  ../stocks/authed/AAL?from=                      <--   returns 400 Bad Request   (Parameters allowed are from and to)
+//    []  ../stocks/authed/AAL31?from=                    <--   returns 400 Bad Request   (symbol must be 1-5 capital letters)
+//    [X]  ../stocks/authed/AAL?from=2020-03-19            <--   returns all AAL date from and onwards  (in square brackets)
+//    [X]  ../stocks/authed/AAL?from=2020-03-19&           <--   returns all AAL date from and onwards
+//    [X]  ../stocks/authed/AAL?from=2020-03-19&to         <--   returns 400 Bad Request   (Parameters allowed are from and to)
+//    [X]  ../stocks/authed/AAL?from=2020-03-19&to=        <--   returns 400 Bad Request   (Parameters allowed are from and to)
+//    []  ../stocks/authed/AAL?from=2020-03-19&to=2020    <--   returns 404 Not Found     (No entries available fordate range)
 
 // price history page, also has date ???
 router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
 
-  // query key paramas
   let fromQuery = Object.keys(req.query)[0];
   let toQuery = Object.keys(req.query)[1];
 
-  // query value params
   let fromValue = Object.values(req.query)[0];
   let toValue = Object.values(req.query)[1];
 
+  console.log(req.query)
 
   req.db.from("stocks")
     .select("*")
     .where("symbol", "=", req.params.symbol)
     .modify(function (queryBuilder) {
 
-      // if query params != 'from' or 'to', or no data supplied
-      if ((fromQuery !== "from" || toQuery !== "to") || (fromValue === "" || toValue === ""))
-        return res.status(400).json({ "error": true, "message": "Parameters allowed are 'from' and 'to', example: /stocks/authed/AAL?from=2020-03-15" });
+      // if only symbol supplied, display most recent symbol price
+      if (fromQuery === undefined && toQuery === undefined)
+        queryBuilder.limit(1);
+
+      // if just from supplied, show everything from 'from' and onwards
+      else if (req.query.from && (toQuery === undefined))
+        queryBuilder.where("timestamp", ">", req.query.from);
+
+      // if query params != 'from' or 'to', or no data supplied in query, 400 error
+      else if ((fromQuery !== "from" || toQuery !== "to") || (fromValue === "" || toValue === ""))
+        res.status(400).json({ "error": true, "message": "Parameters allowed are 'from' and 'to', example: /stocks/authed/AAL?from=2020-03-15" });
 
       // if both supplied, query between dates
       else if (req.query.from && req.query.to)
-        //queryBuilder.whereBetween("timestamp", [req.query.from, req.query.to]);
         queryBuilder.andWhere("timestamp", ">", req.query.from).andWhere("timestamp", "<=", req.query.to);
-
-      // if just from supplied, show everything past that date
-      else if (req.query.from)
-        queryBuilder.where("timestamp", ">", req.query.from);
-
-      // if only symbol supplied, display most recent
-      else
-        queryBuilder.limit(1);
 
     })
     .then(rows => {
@@ -201,7 +173,8 @@ router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
       } catch (e) { }
     })
     .catch(err => {
-      res.status(500).json({ "Error": true, "Message": "Error executing mysql query" });
+      console.log(err.message)
+      res.status(400).json({ "error": true, "message": "Cannot parse supplied date values" });
     })
 });
 

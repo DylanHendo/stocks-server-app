@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -11,7 +13,6 @@ const db = require('./database/db');    // database connection
 const swaggerUI = require('swagger-ui-express');
 const yaml = require('yamljs');
 let swaggerDocument = yaml.load("./swagger.yaml");
-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
