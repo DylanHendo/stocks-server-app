@@ -4,6 +4,8 @@ module.exports = {
     host: 'localhost',
     database: 'webcomputing',
     user: 'root',
-    password: 'password'
+    password: 'Cab230!'
   }
 }
+
+// current IP : 172.22.26.223

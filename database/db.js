@@ -4,14 +4,13 @@ const mysql = require('mysql');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'password',
+  password: 'Cab230!',
   database: 'webcomputing'
 });
 
 connection.connect(function (err) {
   if (err) throw err;
 });
-
 
 // middleware
 module.exports = (req, res, next) => {
