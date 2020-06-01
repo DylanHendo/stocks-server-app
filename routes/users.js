@@ -1,9 +1,14 @@
-let express = require('express');
-let router = express.Router();
-let jwt = require('jsonwebtoken');
-let bcrypt = require('bcrypt');
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-// middleware
+/**
+ * Checks that request body from POST is not empty
+ * @param {*} req Request
+ * @param {*} res Response
+ * @param {*} next Next() function
+ */
 function isRequestBodyEmpty(req, res, next) {
   const { email, password } = req.body;
 
@@ -35,9 +40,6 @@ router.post('/register', isRequestBodyEmpty, function (req, res, next) {
         return;
       }
     })
-  // .catch(err => {
-  //   console.log("error 1")
-  // });
 
   const saltRounds = 10;
   const hash = bcrypt.hashSync(password, saltRounds);
