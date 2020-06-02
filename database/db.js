@@ -3,7 +3,7 @@ const mysql = require('mysql');
 // connec to db containting stocks info
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
+  user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: 'webcomputing'
 });

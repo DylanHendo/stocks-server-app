@@ -3,7 +3,7 @@ module.exports = {
   connection: {
     host: 'localhost',
     database: 'webcomputing',
-    user: 'root',
+    user: process.env.DB_USER,
     password: process.env.DB_PASS
   }
 }
