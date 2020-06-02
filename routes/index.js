@@ -82,6 +82,7 @@ router.get('/stocks/:symbol', function (req, res, next) {
 });
 
 
+
 // Authorized price history route
 router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
 
@@ -90,8 +91,8 @@ router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
   let toQuery = Object.keys(req.query)[1];
 
   // object values of query
-  let fromValue = Object.values(req.query)[0];
-  let toValue = Object.values(req.query)[1];
+  let fromValue = req.query.from;
+  let toValue = req.query.to;
 
   req.db.from("stocks")
     .select("*")
@@ -112,18 +113,19 @@ router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
           "error": true,
           "message": "To date cannot be parsed by Date.parse()"
         });
-      } else if (fromQuery === undefined && toQuery === undefined) {
-        queryBuilder.limit(1);  // if only symbol supplied, display most recent symbol price
-      } else if (req.query.from && (toQuery === undefined)) {
-        queryBuilder.where("timestamp", ">", new Date(fromValue));  // if just 'from' supplied, show everything from 'from' and onwards
-      } else if ((!req.query.from || !req.query.to) || (fromValue === "" || toValue === "")) {
-        // if query params != 'from' or 'to', or no data supplied in query, 400 error
+      } else if (!fromQuery && !toQuery) {
+        queryBuilder.limit(1);    // if only symbol supplied (no query params), display most recent symbol price
+      } else if (fromValue && (toQuery === undefined)) {
+        queryBuilder.andWhere("timestamp", ">", new Date(fromValue)); // if just 'from' supplied, show everything 'from' and onwards
+      } else if (toValue && (fromQuery === 'to')) {
+        queryBuilder.andWhere("timestamp", "<=", new Date(toValue)); // if just 'to' supplied, show everything prior to 'to'
+      } else if (fromValue && toValue) {
+        queryBuilder.andWhere("timestamp", ">", new Date(fromValue)).andWhere("timestamp", "<=", new Date(toValue));
+      } else {
         res.status(400).json({
           "error": true,
           "message": "Parameters allowed are 'from' and 'to', example: /stocks/authed/AAL?from=2020-03-15"
         });
-      } else if (req.query.from && req.query.to) {
-        queryBuilder.andWhere("timestamp", ">", new Date(fromValue)).andWhere("timestamp", "<=", new Date(toValue));
       }
     })
     .then(rows => {
