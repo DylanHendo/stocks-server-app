@@ -14,8 +14,7 @@ router.get('/stocks/symbols', function (req, res, next) {
     .distinct("name")
     .modify(function (queryBuilder) {
       if (req.query.industry === undefined && (fromQuery.length === 0)) {
-        // if no query param, display all data
-        return;
+        return;   // if no query param, display all data
       } else if (!req.query.industry || (req.query.industry === "")) {
         res.status(400).json({
           "error": true,
@@ -28,6 +27,7 @@ router.get('/stocks/symbols', function (req, res, next) {
     .then(rows => {
       try {
         if (rows.length == 0) {
+          // no data returned
           res.status(404).json({
             "error": true,
             "message": "Industry sector not found"
@@ -35,7 +35,7 @@ router.get('/stocks/symbols', function (req, res, next) {
         } else {
           res.status(200).json(rows);
         }
-      } catch (e) { }   // catch UnhandledPromiseRejectionWarning
+      } catch (ignored) { }   // catch UnhandledPromiseRejectionWarning
     })
     .catch(err => {
       res.status(500).json({ 
@@ -88,7 +88,7 @@ router.get('/stocks/:symbol', function (req, res, next) {
 
 // Authorized price history route
 router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
-
+  
   // object keys of query
   let fromQuery = Object.keys(req.query)[0];
   let toQuery = Object.keys(req.query)[1];
