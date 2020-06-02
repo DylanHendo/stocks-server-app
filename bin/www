@@ -24,7 +24,7 @@ var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTPS server.
  */
 
 var server = https.createServer(credentials, app);

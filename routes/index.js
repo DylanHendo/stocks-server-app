@@ -35,10 +35,13 @@ router.get('/stocks/symbols', function (req, res, next) {
         } else {
           res.status(200).json(rows);
         }
-      } catch (e) { }   // catch --> UnhandledPromiseRejectionWarning: Error [ERR_HTTP_HEADERS_SENT] (send two status codes)
+      } catch (e) { }   // catch UnhandledPromiseRejectionWarning
     })
     .catch(err => {
-      res.status(500).json({ "Error": true, "Message": "Error executing mysql query" });
+      res.status(500).json({ 
+        "error": true, 
+        "message": "error executing mysql query" 
+      });
     })
 });
 

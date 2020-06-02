@@ -7,5 +7,3 @@ module.exports = {
     password: process.env.DB_PASS
   }
 }
-
-// current IP : 172.22.26.223
