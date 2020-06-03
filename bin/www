@@ -8,6 +8,11 @@ var app = require('../app');
 var debug = require('debug')('stocks-server-app:server');
 var https = require('https');
 
+
+/**
+ * Create certificate for https
+ */
+
 const fs = require('fs');
 const privateKey = fs.readFileSync('/etc/ssl/private/node-selfsigned.key', 'utf8');
 const certificate = fs.readFileSync('/etc/ssl/certs/node-selfsigned.crt', 'utf8');
