@@ -85,15 +85,15 @@ router.get('/stocks/:symbol', function (req, res, next) {
 });
 
 
-
 // Authorized price history route
 router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
   
   // object keys of query
   let fromQuery = Object.keys(req.query)[0];
   let toQuery = Object.keys(req.query)[1];
+  let len = Object.keys(req.query).length;    // num of queries supplied
 
-  // object values of query
+  // object values of query params
   let fromValue = req.query.from;
   let toValue = req.query.to;
 
@@ -122,7 +122,7 @@ router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
         queryBuilder.andWhere("timestamp", ">", new Date(fromValue)); // if just 'from' supplied, show everything 'from' and onwards
       } else if (toValue && (fromQuery === 'to')) {
         queryBuilder.andWhere("timestamp", "<=", new Date(toValue)); // if just 'to' supplied, show everything prior to 'to'
-      } else if (fromValue && toValue) {
+      } else if ((fromValue && toValue) && len === 2) {
         queryBuilder.andWhere("timestamp", ">", new Date(fromValue)).andWhere("timestamp", "<=", new Date(toValue));
       } else {
         res.status(400).json({
@@ -140,7 +140,7 @@ router.get('/stocks/authed/:symbol', authorize, function (req, res, next) {
         } else {
           res.json(rows);
         }
-      } catch (e) { }
+      } catch (ignored) { }
     })
     .catch(err => {
       res.status(500).json({ "error": true, "message": "Server error" });

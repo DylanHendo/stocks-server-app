@@ -29,13 +29,12 @@
 [X] swap to linux
     [X] make sure DB only has 1 default user
     [X] change password in db.js and knexfile.js to be "Cab230!"
-[] upgrade to HTTPS
-    [] generate cert
-    [] run tests again (will be https)
-[] deploy
-    [] change URL to be the VM's IP
-        [] in swagger docs
+[X] upgrade to HTTPS
+    [X] generate cert
+    [X] run tests again (will be https)
+[X] deploy
+    [X] change URL to be the VM's IP
+        [X] in swagger docs
     [X] install pm2
-    [] test again with the VM's IP
-    [] update swagger link to be VM URL
-[] finish report
+    [X] test again with the VM's IP
+[X] finish report

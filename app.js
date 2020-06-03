@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config()  // configure .env
 
 const createError = require('http-errors');
 const express = require('express');
